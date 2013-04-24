@@ -10,7 +10,9 @@
         "url": "https://github.com/mwilliamson/glimpse-connect.git"
     },
     "dependencies": {
-        "connect": "~2.7.6"
+        "connect": "~2.7.6",
+        "traceback": "~0.3.0",
+        "underscore": "~1.4.4"
     },
     "devDependencies": {
         "nodeunit": "~0.8.0",
