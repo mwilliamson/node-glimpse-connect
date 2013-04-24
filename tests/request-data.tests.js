@@ -47,10 +47,11 @@ exports["middleware tab contains names of middleware functions that have been tr
     var dataStore = new DataStore();
     dataStore.addRequest(requestId, request);
     dataStore.addMiddleware(requestId, fakeMiddleware);
+    dataStore.addMiddleware(requestId, function() { });
     var glimpseData = dataStore.generateGlimpseData(requestId);
     var middlewareTab = glimpseData.data.Middleware;
     test.equal(middlewareTab.name, "Middleware");
-    test.deepEqual(middlewareTab.data, [["Name"], ["fakeMiddleware"]]);
+    test.deepEqual(middlewareTab.data, [["Name"], ["fakeMiddleware"], ["(anonymous)"]]);
     test.done();
 };
 
