@@ -8,6 +8,7 @@ exports["basic glimpse data is extracted from request"] = function(test) {
     var glimpseData = glimpseDataForRequest(request)
     test.equal(glimpseData.method, "GET");
     test.equal(glimpseData.requestId, requestId);
+    test.ok(glimpseData.data);
     test.done();
 };
 
