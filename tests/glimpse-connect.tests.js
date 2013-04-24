@@ -1,8 +1,9 @@
 var assert = require("assert");
-var glimpseConnect = require("../");
+var path = require("path");
 
 var connect = require("connect");
 
+var glimpseConnect = require("../");
 var test = require("./testing").test;
 var startConnectServer = require("./server").startConnectServer;
 var requests = require("./requests")
@@ -32,18 +33,36 @@ exports["request JSON contains HTTP request method"] = test(function() {
     var server = startConnectServer(glimpseConnect());
     return requests.get(server.url("/"))
         .then(function(response) {
-            var scriptRegexResult = /<script src="(\/glimpse\/request\/[^\/]+)">/.exec(response.body);
-            var dataPath = scriptRegexResult[1];
-            return server.url(dataPath);
+            return getGlimpseRequestData(server, response);
         })
-        .then(requests.get)
-        .then(function(response) {
-            var responseRegexResult = /^glimpse\.data\.initData\((.*)\);\s*$/.exec(response.body);
-            var data = JSON.parse(responseRegexResult[1]);
+        .then(function(data) {
             assert.equal(data.method, "GET");
         })
         .fin(server.stop);
 });
+
+exports["request JSON contains middleware source details"] = test(function() {
+    var server = startConnectServer(glimpseConnect());
+    return requests.get(server.url("/"))
+        .then(function(response) {
+            return getGlimpseRequestData(server, response);
+        })
+        .then(function(data) {
+            assert.equal(data.data.Middleware.data[1][1], path.join(__dirname,  "../lib/index.js"));
+        })
+        .fin(server.stop);
+});
+
+function getGlimpseRequestData(server, response) {
+    var scriptRegexResult = /<script src="(\/glimpse\/request\/[^\/]+)">/.exec(response.body);
+    var dataPath = scriptRegexResult[1];
+    var url = server.url(dataPath);
+    return requests.get(url)
+        .then(function(response) {
+            var responseRegexResult = /^glimpse\.data\.initData\((.*)\);\s*$/.exec(response.body);
+            return JSON.parse(responseRegexResult[1]);
+        })
+}
 
 function hasGlimpse(response) {
     return stringContains(response.body, "glimpse.js");
