@@ -1,0 +1,25 @@
+{
+    "name": "glimpse-connect",
+    "version": "0.1.0",
+    "author": "Michael Williamson <mike@zwobble.org>",
+    "description": "Glimpse for Connect",
+    "keywords": ["glimpse", "connect"],
+    "main": "./lib/index.js",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/mwilliamson/glimpse-connect.git"
+    },
+    "dependencies": {
+        "connect": "~2.7.6"
+    },
+    "devDependencies": {
+        "nodeunit": "~0.8.0",
+        "q": "~0.9.3",
+        "request": "2.20.0"
+    },
+    "license": "BSD",
+    "scripts": {
+        "test": "make test"
+    }
+}
+
