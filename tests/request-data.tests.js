@@ -31,8 +31,35 @@ exports["request tab is generated with request details"] = function(test) {
     test.done();
 };
 
+exports["middleware tab is empty if no middleware is tracked"] = function(test) {
+    var request = fakeRequest({});
+    var dataStore = new DataStore();
+    dataStore.addRequest(requestId, request);
+    var glimpseData = dataStore.generateGlimpseData(requestId);
+    var middlewareTab = glimpseData.data.Middleware;
+    test.equal(middlewareTab.name, "Middleware");
+    test.deepEqual(middlewareTab.data, [["Name"]]);
+    test.done();
+};
+
+exports["middleware tab contains names of middleware functions that have been tracked"] = function(test) {
+    var request = fakeRequest({});
+    var dataStore = new DataStore();
+    dataStore.addRequest(requestId, request);
+    dataStore.addMiddleware(requestId, fakeMiddleware);
+    var glimpseData = dataStore.generateGlimpseData(requestId);
+    var middlewareTab = glimpseData.data.Middleware;
+    test.equal(middlewareTab.name, "Middleware");
+    test.deepEqual(middlewareTab.data, [["Name"], ["fakeMiddleware"]]);
+    test.done();
+};
+
 function fakeRequest(request) {
+    request.headers = request.headers || {};
     return request;
+}
+
+function fakeMiddleware(request, response, next) {
 }
 
 function glimpseDataForRequest(request) {
