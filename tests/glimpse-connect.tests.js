@@ -19,7 +19,7 @@ exports["starting server with glimpse disabled does not include glimpse script"]
 });
 
 exports["starting server with glimpse includes glimpse script"] = test(function() {
-    var server = startConnectServer(glimpseConnect.wrap(connect()));
+    var server = startConnectServer(glimpseConnect());
     return requests.get(server.url("/"))
         .then(function(response) {
             assert.ok(stringContains(response.body, "Hello from Connect!"));
@@ -29,7 +29,7 @@ exports["starting server with glimpse includes glimpse script"] = test(function(
 });
 
 exports["request JSON contains HTTP request method"] = test(function() {
-    var server = startConnectServer(glimpseConnect.wrap(connect()));
+    var server = startConnectServer(glimpseConnect());
     return requests.get(server.url("/"))
         .then(function(response) {
             var scriptRegexResult = /<script src="(\/glimpse\/request\/[^\/]+)">/.exec(response.body);
