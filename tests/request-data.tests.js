@@ -18,6 +18,19 @@ exports["basic glimpse data is extracted from request"] = function(test) {
     test.done();
 };
 
+exports["request tab is generated with request details"] = function(test) {
+    var request = fakeRequest({
+        method: "GET",
+        headers: {'host': 'eg.com'},
+        url: "/hello"
+    });
+    var glimpseData = glimpseDataForRequest(request)
+    var requestTab = glimpseData.data.Request;
+    test.equal(requestTab.name, "Request");
+    test.deepEqual(requestTab.data.Headers, {'host': 'eg.com'});
+    test.done();
+};
+
 function fakeRequest(request) {
     return request;
 }
