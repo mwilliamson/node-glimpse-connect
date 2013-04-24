@@ -8,7 +8,7 @@ var startConnectServer = require("./server").startConnectServer;
 var requests = require("./requests")
 
 
-exports["starting server with glimpse disabled does not show glimpse icon"] = test(function() {
+exports["starting server with glimpse disabled does not include glimpse script"] = test(function() {
     var server = startConnectServer(connect());
     return requests.get(server.url("/"))
         .then(function(response) {
@@ -18,7 +18,7 @@ exports["starting server with glimpse disabled does not show glimpse icon"] = te
         .fin(server.stop);
 });
 
-exports["starting server with glimpse enabled shows glimpse icon"] = test(function() {
+exports["starting server with glimpse includes glimpse script"] = test(function() {
     var server = startConnectServer(glimpseConnect.wrap(connect()));
     return requests.get(server.url("/"))
         .then(function(response) {
@@ -28,8 +28,25 @@ exports["starting server with glimpse enabled shows glimpse icon"] = test(functi
         .fin(server.stop);
 });
 
+exports["request JSON contains HTTP request method"] = test(function() {
+    var server = startConnectServer(glimpseConnect.wrap(connect()));
+    return requests.get(server.url("/"))
+        .then(function(response) {
+            var scriptRegexResult = /<script src="(\/glimpse\/request\/[^\/]+)">/.exec(response.body);
+            var dataPath = scriptRegexResult[1];
+            return server.url(dataPath);
+        })
+        .then(requests.get)
+        .then(function(response) {
+            var responseRegexResult = /^glimpse\.data\.initData\((.*)\);\s*$/.exec(response.body);
+            var data = JSON.parse(responseRegexResult[1]);
+            assert.equal(data.method, "GET");
+        })
+        .fin(server.stop);
+});
+
 function hasGlimpse(response) {
-    return stringContains(response.body, "glimpse-icon");
+    return stringContains(response.body, "glimpse.js");
 }
 
 function stringContains(haystack, needle) {
