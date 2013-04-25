@@ -41,14 +41,14 @@ exports["request JSON contains HTTP request method"] = test(function() {
         .fin(server.stop);
 });
 
-exports["request JSON contains middleware source details"] = test(function() {
+exports["request JSON contains middleware details"] = test(function() {
     var server = startConnectServer(glimpseConnect());
     return requests.get(server.url("/"))
         .then(function(response) {
             return getGlimpseRequestData(server, response);
         })
         .then(function(data) {
-            assert.equal(data.data.Middleware.data[1][1], path.join(__dirname,  "../lib/index.js"));
+            assert.equal(data.data.Middleware.data[1][0], "static");
         })
         .fin(server.stop);
 });
