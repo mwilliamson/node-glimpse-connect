@@ -41,7 +41,7 @@ exports["middleware tab is empty if no middleware is tracked"] = function(test) 
     var glimpseData = dataStore.generateGlimpseData(requestId);
     var middlewareTab = glimpseData.data.Middleware;
     test.equal(middlewareTab.name, "Middleware");
-    test.deepEqual(middlewareTab.data, [["Name", "Path", "Line", "Col"]]);
+    test.deepEqual(middlewareTab.data.length, 1);
     test.done();
 };
 
@@ -70,6 +70,19 @@ exports["middleware tab contains source details for tracked middleware"] = funct
     test.deepEqual(data[1], path.join(__dirname, "middleware.js")); // Source file
     test.deepEqual(data[2], 0); // Line number
     test.deepEqual(data[3], 85); // Column number
+    test.done();
+};
+
+exports["middleware tab contains source details for use invocation"] = function(test) {
+    var request = fakeRequest({});
+    var dataStore = new DataStore();
+    dataStore.addRequest(requestId, request);
+    dataStore.addMiddleware(requestId, fakeMiddleware, [{path: "here.js"}]);
+    var glimpseData = dataStore.generateGlimpseData(requestId);
+    var middlewareTab = glimpseData.data.Middleware;
+    var data = middlewareTab.data[1];
+    var useStackTrace = data[4];
+    test.deepEqual(useStackTrace[0].path, "here.js"); // app.use stack trace
     test.done();
 };
 
