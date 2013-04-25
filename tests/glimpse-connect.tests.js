@@ -48,7 +48,9 @@ exports["request JSON contains middleware details"] = test(function() {
             return getGlimpseRequestData(server, response);
         })
         .then(function(data) {
-            assert.equal(data.data.Middleware.data[1][0], "static");
+            // The first middleware should be favicon since we want to
+            // ignore Glimpse middleware
+            assert.equal(data.data.Middleware.data[1][0], "favicon");
         })
         .fin(server.stop);
 });
