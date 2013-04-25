@@ -50,9 +50,9 @@ exports["request JSON contains middleware details"] = test(function() {
         .then(function(data) {
             // The first middleware should be favicon since we want to
             // ignore Glimpse middleware
-            var firstMiddleware = data.data.Middleware.data[1];
-            assert.equal(firstMiddleware[0], "favicon");
-            var usageStackTrace = firstMiddleware[4];
+            var firstMiddleware = data.data.Middleware.data[0];
+            assert.equal(firstMiddleware.name, "favicon");
+            var usageStackTrace = firstMiddleware.useStackTrace;
             assert.equal(usageStackTrace[0].path, path.join(__dirname, "server.js"));
         })
         .fin(server.stop);

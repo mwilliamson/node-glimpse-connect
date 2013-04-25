@@ -41,7 +41,7 @@ exports["middleware tab is empty if no middleware is tracked"] = function(test) 
     var glimpseData = dataStore.generateGlimpseData(requestId);
     var middlewareTab = glimpseData.data.Middleware;
     test.equal(middlewareTab.name, "Middleware");
-    test.deepEqual(middlewareTab.data.length, 1);
+    test.deepEqual(middlewareTab.data.length, 0);
     test.done();
 };
 
@@ -54,8 +54,8 @@ exports["middleware tab contains names of middleware functions that have been tr
     var glimpseData = dataStore.generateGlimpseData(requestId);
     var middlewareTab = glimpseData.data.Middleware;
     test.equal(middlewareTab.name, "Middleware");
-    test.deepEqual(middlewareTab.data[1][0], "fakeMiddleware");
-    test.deepEqual(middlewareTab.data[2][0], "(anonymous)");
+    test.deepEqual(middlewareTab.data[0].name, "fakeMiddleware");
+    test.deepEqual(middlewareTab.data[1].name, "(anonymous)");
     test.done();
 };
 
@@ -66,10 +66,10 @@ exports["middleware tab contains source details for tracked middleware"] = funct
     dataStore.addMiddleware(requestId, fakeMiddleware);
     var glimpseData = dataStore.generateGlimpseData(requestId);
     var middlewareTab = glimpseData.data.Middleware;
-    var data = middlewareTab.data[1];
-    test.deepEqual(data[1], path.join(__dirname, "middleware.js")); // Source file
-    test.deepEqual(data[2], 0); // Line number
-    test.deepEqual(data[3], 85); // Column number
+    var data = middlewareTab.data[0];
+    test.deepEqual(data.sourcePath, path.join(__dirname, "middleware.js"));
+    test.deepEqual(data.sourceLine, 0);
+    test.deepEqual(data.sourceColumn, 85);
     test.done();
 };
 
@@ -80,9 +80,9 @@ exports["middleware tab contains source details for use invocation"] = function(
     dataStore.addMiddleware(requestId, fakeMiddleware, [{path: "here.js"}]);
     var glimpseData = dataStore.generateGlimpseData(requestId);
     var middlewareTab = glimpseData.data.Middleware;
-    var data = middlewareTab.data[1];
-    var useStackTrace = data[4];
-    test.deepEqual(useStackTrace[0].path, "here.js"); // app.use stack trace
+    var data = middlewareTab.data[0];
+    var useStackTrace = data.useStackTrace;
+    test.deepEqual(useStackTrace[0].path, "here.js");
     test.done();
 };
 
