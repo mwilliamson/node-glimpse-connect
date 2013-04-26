@@ -4,7 +4,7 @@ This module adds support for [Glimpse](http://getglimpse.com/) to Connect.
 
 ## Usage
 
-The recommened way to use Glimpse is to call `glimpseConnect()` instead of `connect()`.
+The recommended way to use Glimpse is to call `glimpseConnect()` instead of `connect()`.
 For instance, if your code looks like this:
 
 ```javascript
