@@ -58,6 +58,23 @@ exports["request JSON contains middleware details"] = test(function() {
         .fin(server.stop);
 });
 
+exports["can glimpsify app after construction"] = test(function() {
+    var server = startConnectServer(connect());
+    glimpseConnect.glimpsify(server.app);
+    return requests.get(server.url("/"))
+        .then(function(response) {
+            return getGlimpseRequestData(server, response);
+        })
+        .then(function(data) {
+            var firstMiddleware = data.data.Middleware.data[0];
+            assert.equal(firstMiddleware.name, "favicon");
+            var usageStackTrace = firstMiddleware.useStackTrace;
+            // usageStackTrace is empty since we're glimpsifying post-hoc
+            assert.deepEqual(usageStackTrace, "(unknown)");
+        })
+        .fin(server.stop);
+});
+
 function getGlimpseRequestData(server, response) {
     var scriptRegexResult = /<script src="(\/glimpse\/request\/[^\/]+)">/.exec(response.body);
     var dataPath = scriptRegexResult[1];

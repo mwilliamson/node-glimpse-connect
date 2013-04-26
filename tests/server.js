@@ -43,7 +43,8 @@ function startConnectServer(app) {
     
     return {
         url: url,
-        stop: stop
+        stop: stop,
+        app: app
     };
 }
 
