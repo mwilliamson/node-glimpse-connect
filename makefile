@@ -10,3 +10,4 @@ node_modules: package.json
 
 test: setup
 	node_modules/.bin/nodeunit tests/*.tests.js
+	node_modules/.bin/nodeunit tests/global.tests-evil.js

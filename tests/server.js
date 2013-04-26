@@ -49,6 +49,7 @@ function startConnectServer(app) {
 }
 
 if (require.main === module) {
-    var server = startConnectServer(glimpseConnect());
+    glimpseConnect.globalGlimpsify();
+    var server = startConnectServer(connect());
     console.log("Running on " + server.url("/"));
 }
