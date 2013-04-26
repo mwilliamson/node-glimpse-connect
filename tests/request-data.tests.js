@@ -86,6 +86,14 @@ exports["middleware tab contains source details for use invocation"] = function(
     test.done();
 };
 
+exports["addMiddleware does nothing if request is not being tracked"] = function(test) {
+    var dataStore = new DataStore();
+    dataStore.addMiddleware(requestId, fakeMiddleware, [{path: "here.js"}]);
+    var glimpseData = dataStore.generateGlimpseData(requestId);
+    test.strictEqual(null, glimpseData);
+    test.done();
+};
+
 function fakeRequest(request) {
     request.headers = request.headers || {};
     return request;
