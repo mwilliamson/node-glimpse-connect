@@ -94,6 +94,29 @@ exports["addMiddleware does nothing if request is not being tracked"] = function
     test.done();
 };
 
+exports["old requests are discarded as new requests are added"] = function(test) {
+    var request = fakeRequest({
+        method: "GET",
+        headers: {'host': 'eg.com'},
+        url: "/hello"
+    });
+    
+    var dataStore = new DataStore({bufferSize: 2});
+    dataStore.addRequest("0", request);
+    dataStore.addRequest("5", request);
+    
+    test.ok(dataStore.generateGlimpseData("0"));
+    test.ok(dataStore.generateGlimpseData("5"));
+    
+    dataStore.addRequest("2", request);
+    
+    test.ok(!dataStore.generateGlimpseData("0"));
+    test.ok(dataStore.generateGlimpseData("5"));
+    test.ok(dataStore.generateGlimpseData("2"));
+    
+    test.done();
+};
+
 function fakeRequest(request) {
     request.headers = request.headers || {};
     return request;

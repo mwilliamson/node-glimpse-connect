@@ -13,7 +13,8 @@
         "connect": "~2.7.6",
         "traceback": "~0.3.0",
         "underscore": "~1.4.4",
-        "function-inspector": "git+https://github.com/mwilliamson/node-function-inspector.git"
+        "function-inspector": "git+https://github.com/mwilliamson/node-function-inspector.git",
+        "dequeue": "~1.0.4"
     },
     "devDependencies": {
         "nodeunit": "~0.8.0",
